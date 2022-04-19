@@ -1,2 +1,0 @@
-# fuckleetcode
-leetcode solutions
