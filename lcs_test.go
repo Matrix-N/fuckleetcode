@@ -510,3 +510,513 @@ func Test_mergeKLists(t *testing.T) {
 		})
 	}
 }
+
+func Test_isValid(t *testing.T) {
+	type args struct {
+		s string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+
+		{
+			name: "()()()",
+			args: args{
+				"()()()",
+			},
+			want: true,
+		},
+		{
+			name: "()()(",
+			args: args{
+				"()()(",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isValid(tt.args.s); got != tt.want {
+				t.Errorf("isValid() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_nextPermutation(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{
+			name: "a",
+			args: args{
+				nums: []int{1, 2, 3},
+			},
+			want: []int{1, 3, 2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			nextPermutation(tt.args.nums)
+		})
+	}
+}
+
+var (
+	l1 *ListNode = &ListNode{
+		Val:  1,
+		Next: nil,
+	}
+	l2 *ListNode = &ListNode{
+		Val:  2,
+		Next: nil,
+	}
+	l3 *ListNode = &ListNode{
+		Val:  3,
+		Next: nil,
+	}
+)
+
+var (
+	tree1 = &TreeNode{
+		Val: 1,
+	}
+	tree2 = &TreeNode{
+		Val: 2,
+	}
+	tree3 = &TreeNode{
+		Val: 3,
+	}
+)
+
+func Test_hasCycle(t *testing.T) {
+	type args struct {
+		head *ListNode
+	}
+	l1.Next = l2
+	l2.Next = l3
+	l3.Next = l1
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				l1,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := hasCycle(tt.args.head); got != tt.want {
+				t.Errorf("hasCycle() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_inorderTraversal(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	root := &TreeNode{Val: 1}
+	root.Right = &TreeNode{Val: 2, Left: &TreeNode{Val: 3}}
+
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				root: root,
+			},
+			want: []int{1, 3, 2},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := inorderTraversal(tt.args.root); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("inorderTraversal() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_isSymmetric(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	root := &TreeNode{
+		Val: 1,
+		Left: &TreeNode{
+			Val: 2,
+			Right: &TreeNode{
+				Val: 4,
+			},
+		},
+		Right: &TreeNode{
+			Val: 2,
+			Left: &TreeNode{
+				Val: 4,
+			},
+		},
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				root: root,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isSymmetric(tt.args.root); got != tt.want {
+				t.Errorf("isSymmetric() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_levelOrder(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	tests := []struct {
+		name string
+		args args
+		want [][]int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				root: &TreeNode{
+					Val: 3,
+					Left: &TreeNode{
+						Val: 9,
+					},
+					Right: &TreeNode{
+						Val: 20,
+						Left: &TreeNode{
+							Val: 15,
+						},
+						Right: &TreeNode{
+							Val: 7,
+						},
+					},
+				},
+			},
+			want: [][]int{
+				{3},
+				{9, 20},
+				{15, 7},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := levelOrder(tt.args.root); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("levelOrder() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_maxDepth(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := maxDepth(tt.args.root); got != tt.want {
+				t.Errorf("maxDepth() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_buildTree(t *testing.T) {
+	type args struct {
+		preorder []int
+		inorder  []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want *TreeNode
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				preorder: []int{3, 9, 20, 15, 7},
+				inorder:  []int{9, 3, 15, 20, 7},
+			},
+			want: &TreeNode{
+				Val: 3,
+				Left: &TreeNode{
+					Val: 9,
+				},
+				Right: &TreeNode{
+					Val: 20,
+					Left: &TreeNode{
+						Val: 15,
+					},
+					Right: &TreeNode{
+						Val: 7,
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := buildTree(tt.args.preorder, tt.args.inorder); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("buildTree() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_flatten(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+		{},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			flatten(tt.args.root)
+		})
+	}
+}
+
+func Test_maxProfit(t *testing.T) {
+	type args struct {
+		prices []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				prices: []int{7, 1, 5, 3, 6, 4},
+			},
+			want: 5,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := maxProfit(tt.args.prices); got != tt.want {
+				t.Errorf("maxProfit() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_maxPathSum(t *testing.T) {
+	type args struct {
+		root *TreeNode
+	}
+	tree1.Left = tree2
+	tree1.Right = tree3
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "1",
+			args: args{
+				root: tree1,
+			},
+			want: 6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := maxPathSum(tt.args.root); got != tt.want {
+				t.Errorf("maxPathSum() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_singleNumber(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				nums: []int{2, 2, 1},
+			},
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := singleNumber(tt.args.nums); got != tt.want {
+				t.Errorf("singleNumber() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_climbStairs(t *testing.T) {
+	type args struct {
+		n int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				n: 2,
+			},
+			want: 2,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := climbStairs(tt.args.n); got != tt.want {
+				t.Errorf("climbStairs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_rotate(t *testing.T) {
+	type args struct {
+		matrix [][]int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				matrix: [][]int{
+					{1, 2, 3},
+					{4, 5, 6},
+					{7, 8, 9},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			rotate(tt.args.matrix)
+		})
+	}
+}
+
+func Test_trap(t *testing.T) {
+	type args struct {
+		height []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				height: []int{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1},
+			},
+			want: 6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := trap(tt.args.height); got != tt.want {
+				t.Errorf("trap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_permute(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want [][]int
+	}{
+		// TODO: Add test cases.
+		{
+			name: "a",
+			args: args{
+				nums: []int{1, 2, 3},
+			},
+			want: [][]int{
+				{1, 2, 3},
+				{1, 3, 2},
+				{2, 1, 3},
+				{2, 3, 1},
+				{3, 1, 2},
+				{3, 2, 1},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := permute(tt.args.nums); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("permute() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

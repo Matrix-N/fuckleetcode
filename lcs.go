@@ -1,6 +1,9 @@
 package fuckleetcode
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 func twoSum(nums []int, target int) []int {
 	m := make(map[int]int)
@@ -282,4 +285,337 @@ func mergeKLists(lists []*ListNode) *ListNode {
 	right := mergeKLists(lists[len(lists)/2:])
 
 	return mergeTwoLists(left, right)
+}
+
+func isValid(s string) bool {
+	if s == "" {
+		return true
+	}
+
+	stack := []byte{}
+
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' || s[i] == '[' || s[i] == '{' {
+			stack = append(stack, s[i])
+		} else {
+			if len(stack) == 0 {
+				return false
+			}
+			if s[i] == ')' && stack[len(stack)-1] != '(' {
+				return false
+			}
+			if s[i] == ']' && stack[len(stack)-1] != '[' {
+				return false
+			}
+			if s[i] == '}' && stack[len(stack)-1] != '{' {
+				return false
+			}
+			stack = stack[:len(stack)-1]
+		}
+	}
+
+	return len(stack) == 0
+}
+
+func nextPermutation(nums []int) {
+	if len(nums) == 0 {
+		return
+	}
+
+	for i := len(nums) - 1; i > 0; i-- {
+		if nums[i] > nums[i-1] {
+			for j := len(nums) - 1; j > i; j-- {
+				if nums[j] > nums[i-1] {
+					nums[i-1], nums[j] = nums[j], nums[i-1]
+					break
+				}
+			}
+			for j := i; j < len(nums)/2; j++ {
+				nums[j], nums[len(nums)-j+i-1] = nums[len(nums)-j+i-1], nums[j]
+			}
+			return
+		}
+	}
+
+	for i := 0; i < len(nums)/2; i++ {
+		nums[i], nums[len(nums)-i-1] = nums[len(nums)-i-1], nums[i]
+	}
+}
+
+func hasCycle(head *ListNode) bool {
+	if head == nil {
+		return false
+	}
+	if head.Next == nil {
+		return false
+	}
+
+	slow, fast := head, head.Next
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+		if slow == fast {
+			return true
+		}
+	}
+
+	return false
+}
+
+func inorderTraversal(root *TreeNode) []int {
+	if root == nil {
+		return []int{}
+	}
+
+	res := []int{}
+	stack := []*TreeNode{}
+	cur := root
+	for cur != nil || len(stack) > 0 {
+		for cur != nil {
+			stack = append(stack, cur)
+			cur = cur.Left
+		}
+		cur = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		res = append(res, cur.Val)
+		cur = cur.Right
+	}
+
+	return res
+}
+
+func isSymmetric(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+
+	return isSymmetricHelper(root.Left, root.Right)
+}
+
+func isSymmetricHelper(left, right *TreeNode) bool {
+	if left == nil && right == nil {
+		return true
+	}
+	if left == nil || right == nil {
+		return false
+	}
+	if left.Val != right.Val {
+		return false
+	}
+
+	return isSymmetricHelper(left.Left, right.Right) && isSymmetricHelper(left.Right, right.Left)
+}
+
+func levelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return [][]int{}
+	}
+
+	res := [][]int{}
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		level := []int{}
+		n := len(queue)
+		for i := 0; i < n; i++ {
+			level = append(level, queue[i].Val)
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		queue = queue[n:]
+		res = append(res, level)
+	}
+
+	return res
+}
+
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	return max(maxDepth(root.Left), maxDepth(root.Right)) + 1
+}
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	if len(preorder) == 0 {
+		return nil
+	}
+	if len(inorder) == 0 {
+		return nil
+	}
+
+	root := &TreeNode{preorder[0], nil, nil}
+	k := 0
+	for i := 0; i < len(inorder); i++ {
+		if inorder[i] == preorder[0] {
+			k = i
+			break
+		}
+	}
+
+	root.Left = buildTree(preorder[1:k+1], inorder[:k])
+	root.Right = buildTree(preorder[k+1:], inorder[k+1:])
+
+	return root
+}
+
+func flatten(root *TreeNode) {
+	if root == nil {
+		return
+	}
+
+	var res []int
+	preorder(root, &res)
+	cur := root
+	for i := 1; i < len(res); i++ {
+		cur.Left = nil
+		cur.Right = &TreeNode{res[i], nil, nil}
+		cur = cur.Right
+	}
+}
+
+func preorder(root *TreeNode, res *[]int) {
+	if root == nil {
+		return
+	}
+
+	*res = append(*res, root.Val)
+	preorder(root.Left, res)
+	preorder(root.Right, res)
+}
+
+func maxProfit(prices []int) int {
+	if len(prices) == 0 {
+		return 0
+	}
+
+	min, max := prices[0], 0
+	for i := 1; i < len(prices); i++ {
+		if prices[i]-min > max {
+			max = prices[i] - min
+		}
+		if prices[i] < min {
+			min = prices[i]
+		}
+	}
+
+	return max
+}
+
+func maxPathSum(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	max := math.MinInt32
+	maxPathSumHelper(root, &max)
+
+	return max
+}
+
+func maxPathSumHelper(root *TreeNode, maxRes *int) int {
+	if root == nil {
+		return 0
+	}
+
+	left := maxPathSumHelper(root.Left, maxRes)
+	right := maxPathSumHelper(root.Right, maxRes)
+
+	curMax := max(root.Val, max(root.Val+left, root.Val+right))
+	*maxRes = max(*maxRes, max(curMax, left+right+root.Val))
+
+	return curMax
+}
+
+func singleNumber(nums []int) int {
+	res := 0
+	for _, num := range nums {
+		res ^= num
+	}
+
+	return res
+}
+
+func climbStairs(n int) int {
+	if n <= 2 {
+		return n
+	}
+	a, b := 1, 2
+	for i := 3; i <= n; i++ {
+		a, b = b, a+b
+	}
+
+	return b
+}
+
+func rotate(matrix [][]int) {
+	n := len(matrix)
+	for i := 0; i < n/2; i++ {
+		for j := i; j < n-i-1; j++ {
+			matrix[i][j], matrix[j][n-i-1], matrix[n-i-1][n-j-1], matrix[n-j-1][i] = matrix[n-j-1][i], matrix[i][j], matrix[j][n-i-1], matrix[n-i-1][n-j-1]
+		}
+	}
+}
+
+func trap(height []int) int {
+	if len(height) == 0 {
+		return 0
+	}
+
+	left, right := 0, len(height)-1
+	leftMax, rightMax := height[left], height[right]
+	res := 0
+
+	for left <= right {
+		if leftMax < rightMax {
+			if height[left] > leftMax {
+				leftMax = height[left]
+			} else {
+				res += leftMax - height[left]
+			}
+			left++
+		} else {
+			if height[right] > rightMax {
+				rightMax = height[right]
+			} else {
+				res += rightMax - height[right]
+			}
+			right--
+		}
+	}
+
+	return res
+}
+
+func permute(nums []int) [][]int {
+	if len(nums) == 0 {
+		return nil
+	}
+
+	res := [][]int{}
+
+	permuteHelper(nums, []int{}, &res)
+
+	return res
+}
+
+func permuteHelper(nums []int, cur []int, res *[][]int) {
+	if len(nums) == 0 {
+		*res = append(*res, cur)
+		return
+	}
+
+	for i := 0; i < len(nums); i++ {
+		newCur := make([]int, len(cur))
+		copy(newCur, cur)
+		newCur = append(newCur, nums[i])
+		newNums := make([]int, len(nums))
+		copy(newNums, nums)
+		newNums = append(newNums[:i], newNums[i+1:]...)
+		permuteHelper(newNums, newCur, res)
+	}
 }
